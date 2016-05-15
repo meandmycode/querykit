@@ -1,5 +1,5 @@
 import { it } from './utils.js';
-import { toArray, each, map, many, reduce, concat } from '../src/querykit.js';
+import { toArray, each, map, many, reduce, concat, group } from '../src/querykit.js';
 
 const defer = fn => new Promise(resolve => setTimeout(resolve(fn()), 0));
 
