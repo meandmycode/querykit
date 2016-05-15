@@ -3,7 +3,7 @@ import { toArray, each, map, many, reduce, concat } from '../src/querykit.js';
 
 const defer = fn => new Promise(resolve => setTimeout(resolve(fn()), 0));
 
-describe('Asynq', () => {
+describe('Querykit', () => {
 
 	it('Should be able to convert a sequence to an array', async () => {
 
