@@ -1,5 +1,5 @@
 import { it } from './utils.js';
-import { toArray, each, map, many, reduce, concat, group } from '../src/querykit.js';
+import { toArray, each, map, many, reduce, concat, group, last } from '../src/querykit.js';
 
 const defer = fn => new Promise(resolve => setTimeout(resolve(fn()), 0));
 
@@ -307,6 +307,50 @@ describe('Querykit', () => {
             [false, [1, 3]],
             [true, [2]]
         ];
+
+        expect(output).toEqual(expected);
+
+    })
+
+    it('Should be able to select the last item from an array', async () => {
+
+        const input = [1, 2, 3];
+
+        const output = await input::last(x => x % 2 === 0);
+
+        const expected = 2;
+
+        expect(output).toEqual(expected);
+
+    })
+
+    it('Should be able to select the last item from a sequence', async () => {
+
+        const input = (function*() {
+            yield 1;
+            yield 2;
+            yield 3;
+        })();
+
+        const output = await input::last(x => x % 2 === 0);
+
+        const expected = 2;
+
+        expect(output).toEqual(expected);
+
+    })
+
+    it('Should be able to select the last item from an async sequence', async () => {
+
+        const input = (async function*() {
+            yield await defer(() => 1);
+            yield await defer(() => 2);
+            yield await defer(() => 3);
+        })();
+
+        const output = await input::last(x => x % 2 === 0);
+
+        const expected = 2;
 
         expect(output).toEqual(expected);
 

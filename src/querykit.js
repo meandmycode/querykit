@@ -186,3 +186,19 @@ export async function* group(keySelector, valueSelector = item => item) {
     }
 
 }
+
+export async function last(predicate) {
+
+    let result;
+
+    await this::each((item, i) => {
+
+        if (predicate == null || predicate(item, i)) {
+            result = item;
+        }
+
+    });
+
+    return result;
+
+}
