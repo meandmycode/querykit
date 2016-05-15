@@ -1,5 +1,5 @@
 import { it } from './utils.js';
-import * as asynq from '../src/querykit.js';
+import { toArray, each, map, many, reduce } from '../src/querykit.js';
 
 const defer = fn => new Promise(resolve => setTimeout(resolve(fn()), 0));
 
@@ -9,7 +9,7 @@ describe('Asynq', () => {
 
 		const input = [1, 2, 3];
 
-		const output = await input::asynq.toArray();
+		const output = await input::toArray();
 
 		expect(output).toEqual(input);
 
@@ -21,7 +21,7 @@ describe('Asynq', () => {
 
         const eachSpy = jasmine.createSpy();
 
-        const output = await input::asynq.each(eachSpy);
+        const output = await input::each(eachSpy);
 
         expect(eachSpy).toHaveBeenCalledWith(1, 0);
         expect(eachSpy).toHaveBeenCalledWith(2, 1);
@@ -39,7 +39,7 @@ describe('Asynq', () => {
 
         const eachSpy = jasmine.createSpy();
 
-        const output = await input::asynq.each(eachSpy);
+        const output = await input::each(eachSpy);
 
         expect(eachSpy).toHaveBeenCalledWith(1, 0);
         expect(eachSpy).toHaveBeenCalledWith(2, 1);
@@ -57,7 +57,7 @@ describe('Asynq', () => {
 
         const eachSpy = jasmine.createSpy();
 
-        const output = await input::asynq.each(eachSpy);
+        const output = await input::each(eachSpy);
 
         expect(eachSpy).toHaveBeenCalledWith(1, 0);
         expect(eachSpy).toHaveBeenCalledWith(2, 1);
@@ -70,8 +70,8 @@ describe('Asynq', () => {
         const input = [1, 2, 3];
 
         const output = await input
-            ::asynq.map(x => x * 2)
-            ::asynq.toArray();
+            ::map(x => x * 2)
+            ::toArray();
 
         const expected = [2, 4, 6];
 
@@ -84,8 +84,8 @@ describe('Asynq', () => {
         const input = [1, 2, 3];
 
         const output = await input
-            ::asynq.map(async x => await defer(() => x * 2))
-            ::asynq.toArray();
+            ::map(async x => await defer(() => x * 2))
+            ::toArray();
 
         const expected = [2, 4, 6];
 
@@ -98,8 +98,8 @@ describe('Asynq', () => {
         const input = [1, 2, 3];
 
         const output = await input
-            ::asynq.map(x => defer(() => x * 2))
-            ::asynq.toArray();
+            ::map(x => defer(() => x * 2))
+            ::toArray();
 
         const expected = [2, 4, 6];
 
@@ -116,8 +116,8 @@ describe('Asynq', () => {
         ];
 
         const output = await input
-            ::asynq.many()
-            ::asynq.toArray();
+            ::many()
+            ::toArray();
 
         const expected = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -134,8 +134,8 @@ describe('Asynq', () => {
         ];
 
         const output = await input
-            ::asynq.many(async row => defer(() => row))
-            ::asynq.toArray();
+            ::many(async row => defer(() => row))
+            ::toArray();
 
         const expected = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -152,8 +152,8 @@ describe('Asynq', () => {
         ];
 
         const output = await input
-            ::asynq.many(row => defer(() => row))
-            ::asynq.toArray();
+            ::many(row => defer(() => row))
+            ::toArray();
 
         const expected = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
