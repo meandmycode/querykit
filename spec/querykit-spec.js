@@ -161,4 +161,40 @@ describe('Asynq', () => {
 
     })
 
+    it('Should be able to reduce synchronous value selectors', async () => {
+
+        const input = [1, 2, 3];
+
+        const output = await input::reduce((sum, x) => sum + x);
+
+        const expected = 6;
+
+        expect(output).toEqual(expected);
+
+    })
+
+    it('Should be able to reduce asynchronous value selectors', async () => {
+
+        const input = [1, 2, 3];
+
+        const output = await input::reduce(async (sum, x) => await defer(() => sum * x));
+
+        const expected = 6;
+
+        expect(output).toEqual(expected);
+
+    })
+
+    it('Should be able to reduce synchronous value selectors that return promises', async () => {
+
+        const input = [1, 2, 3];
+
+        const output = await input::reduce((sum, x) => defer(() => sum * x));
+
+        const expected = 6;
+
+        expect(output).toEqual(expected);
+
+    })
+
 })

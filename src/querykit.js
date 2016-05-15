@@ -101,3 +101,32 @@ export async function* many(itemsSelector = items => items, valueSelector = item
     }
 
 }
+
+export async function reduce(reducer, initialValue) {
+
+    const hasInitialValue = initialValue !== undefined;
+
+    let result = hasInitialValue ? await initialValue : undefined;
+
+    const iterator = getAsyncIterator(this);
+
+    let next, i = 0;
+
+    while ((next = await iterator.next()).done !== true) {
+
+        const item = next.value;
+
+        // if we're on the first item and we don't have an initial value then use the first iteration to establish the first result
+        if (i === 0 && hasInitialValue !== true) {
+            result = item;
+        } else {
+            result = await reducer(result, item, i);
+        }
+
+        i++;
+
+    }
+
+    return result;
+
+}
