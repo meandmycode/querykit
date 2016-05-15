@@ -130,3 +130,12 @@ export async function reduce(reducer, initialValue) {
     return result;
 
 }
+
+export function concat(...otherSequences) {
+
+    const sequence = this;
+    const sequences = [sequence, ...otherSequences];
+
+    return sequences::many();
+
+}

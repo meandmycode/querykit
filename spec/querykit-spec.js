@@ -1,5 +1,5 @@
 import { it } from './utils.js';
-import { toArray, each, map, many, reduce } from '../src/querykit.js';
+import { toArray, each, map, many, reduce, concat } from '../src/querykit.js';
 
 const defer = fn => new Promise(resolve => setTimeout(resolve(fn()), 0));
 
@@ -197,4 +197,67 @@ describe('Asynq', () => {
 
     })
 
+    it('Should be able to concat synchronous arrays', async () => {
+
+        const inputA = [1, 2, 3];
+        const inputB = [4, 5, 6];
+
+        const output = await inputA
+            ::concat(inputB)
+            ::toArray();
+
+        const expected = [1, 2, 3, 4, 5, 6];
+
+        expect(output).toEqual(expected);
+
+
+    })
+
+    it('Should be able to concat synchronous sequences', async () => {
+
+        const inputA = (function*() {
+            yield 1;
+            yield 2;
+            yield 3;
+        })();
+
+        const inputB = (function*() {
+            yield 4;
+            yield 5;
+            yield 6;
+        })();
+
+        const output = await inputA
+            ::concat(inputB)
+            ::toArray();
+
+        const expected = [1, 2, 3, 4, 5, 6];
+
+        expect(output).toEqual(expected);
+
+    })
+
+    it('Should be able to concat asynchronous sequences', async () => {
+
+        const inputA = (async function*() {
+            yield await defer(() => 1);
+            yield await defer(() => 2);
+            yield await defer(() => 3);
+        })();
+
+        const inputB = (async function*() {
+            yield await defer(() => 4);
+            yield await defer(() => 5);
+            yield await defer(() => 6);
+        })();
+
+        const output = await inputA
+            ::concat(inputB)
+            ::toArray();
+
+        const expected = [1, 2, 3, 4, 5, 6];
+
+        expect(output).toEqual(expected);
+
+    })
 })
