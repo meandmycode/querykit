@@ -260,4 +260,56 @@ describe('Asynq', () => {
         expect(output).toEqual(expected);
 
     })
+
+    it('Should be able to group synchronous value selectors', async () => {
+
+        const input = [1, 2, 3];
+
+        const output = await input
+            ::group(x => x % 2 === 0)
+            ::toArray();
+
+        const expected = [
+            [false, [1, 3]],
+            [true, [2]]
+        ];
+
+        expect(output).toEqual(expected);
+
+    })
+
+    it('Should be able to group asynchronous value selectors', async () => {
+
+        const input = [1, 2, 3];
+
+        const output = await input
+            ::group(async x => await defer(() => x % 2 === 0))
+            ::toArray();
+
+        const expected = [
+            [false, [1, 3]],
+            [true, [2]]
+        ];
+
+        expect(output).toEqual(expected);
+
+    })
+
+    it('Should be able to group synchronous value selectors that return promises', async () => {
+
+        const input = [1, 2, 3];
+
+        const output = await input
+            ::group(x => defer(() => x % 2 === 0))
+            ::toArray();
+
+        const expected = [
+            [false, [1, 3]],
+            [true, [2]]
+        ];
+
+        expect(output).toEqual(expected);
+
+    })
+
 })

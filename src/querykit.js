@@ -1,3 +1,19 @@
+function getDefault(key, valueInitializer) {
+
+    const map = this;
+
+    if (map.has(key)) {
+        return map.get(key);
+    }
+
+    const value = valueInitializer(key, map);
+
+    map.set(key, value);
+
+    return value;
+
+}
+
 export function getAsyncIterator(iterable) {
 
     // direct iterators
@@ -137,5 +153,36 @@ export function concat(...otherSequences) {
     const sequences = [sequence, ...otherSequences];
 
     return sequences::many();
+
+}
+
+export async function* group(keySelector, valueSelector = item => item) {
+
+    // todo: make this deferred, currently we execute immediately
+
+    const groups = new Map();
+
+    await this::each(async item => {
+
+        const key = await keySelector(item);
+        const value = await valueSelector(item);
+
+        const group = groups::getDefault(key, () => []);
+
+        group.push(value);
+
+    });
+
+    const iterator = getAsyncIterator(groups.entries());
+
+    let next;
+
+    while ((next = await iterator.next()).done !== true) {
+
+        const item = next.value;
+
+        yield item;
+
+    }
 
 }
