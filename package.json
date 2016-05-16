@@ -1,6 +1,6 @@
 {
   "name": "querykit",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Query functions for your synchronous and asynchronous data.",
   "main": "dist/node/querykit.js",
   "scripts": {
