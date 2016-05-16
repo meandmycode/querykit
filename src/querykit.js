@@ -193,7 +193,7 @@ export async function last(predicate) {
 
     await this::each((item, i) => {
 
-        if (predicate == null || predicate(item, i)) {
+        if (predicate == null || predicate(item, i++)) {
             result = item;
         }
 
