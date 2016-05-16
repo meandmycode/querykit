@@ -202,3 +202,23 @@ export async function last(predicate) {
     return result;
 
 }
+
+export async function first(predicate) {
+
+    const hasPredicate = predicate !== undefined;
+
+    const iterator = getAsyncIterator(this);
+
+    let next, i = 0;
+
+    while ((next = await iterator.next()).done !== true) {
+
+        const item = next.value;
+
+        if (predicate == null || predicate(item, i++)) {
+            return item;
+        }
+
+    }
+
+}
